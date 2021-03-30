@@ -34,6 +34,8 @@ In this article is explained very well how to extract the actual rar from this p
 
 After Step 1, I tried to open the archive in Windows with WinRar, but I figure out that the RAR file was corrupted.
 Fortunately, WinRar is able to repair corrupted RAR files, so I clicked on "Utilites --> Repair a corrupted archive"(this will create a new archive called rebuilt.*name_archive*.rar).
+
+
 ![Capture4](https://user-images.githubusercontent.com/80392368/112875179-242f4700-90c4-11eb-808d-a184e1776fe3.PNG)
 
 
@@ -92,59 +94,9 @@ Leftover Capture Data |
 0000**26**0000000000 |
 
 These are the hex values that I found
-I tried to use his python script to map the `xx` values of the packets with the keys, but it didn't worked for me, so I did it manually using the map declared in the python script: 
-
-`newmap = {
-2: “PostFail”,
-4: “a”,
-5: “b”,
-6: “c”,
-7: “d”,
-8: “e”,
-9: “f”,
-10: “g”,
-11: “h”,
-12: “i”,
-13: “j”,
-14: “k”,
-15: “l”,
-16: “m”,
-17: “n”,
-18: “o”,
-19: “p”,
-20: “q”,
-21: “r”,
-22: “s”,
-23: “t”,
-24: “u”,
-25: “v”,
-26: “w”,
-27: “x”,
-28: “y”,
-29: “z”,
-30: “1”,
-31: “2”,
-32: “3”,
-33: “4”,
-34: “5”,
-35: “6”,
-36: “7”,
-37: “8”,
-38: “9”,
-39: “0”,
-40: “Enter”,
-41: “esc”,
-42: “del”,
-43: “tab”,
-44: “space”,
-45: “-”,
-47: “[“,
-48: “]”,
-56: “/”,
-57: “CapsLock”,
-79: “RightArrow”,
-80: “LetfArrow”
-}`
+I tried to use his python script to map the `xx` values of the packets with the keys, but it didn't worked for me.
+Eventually I figured out that these values are not the hex values of the key pressed, but they are the hex values of the **Usage IDs** of the keys. 
+Fortunately I found a PDF from usb.org that explain the translation between Usage ID and key value. Link to the pdf --> https://usb.org/sites/default/files/documents/hut1_12v2.pdf (page 53)
 
 So the hex values can be translated into:
 28 --> Enter
@@ -175,7 +127,7 @@ Here there is the `tree` command on the root directory:
 ![Capture9](https://user-images.githubusercontent.com/80392368/112881322-cef73380-90cb-11eb-9863-4782c867d177.PNG)
 
 
-Inside each folder there is a file called `FLAG IS HERE.txt` ...obviously most of them are baits, but I knew that the flag must be inside this mess.
+Inside each folder there is a file called `FLAG IS HERE.txt`...obviously most of them are baits, but I knew that the flag must be inside this mess.
 I exported the rar file in windows and I used the search function of WinRar to find the flag(I knew that the format of the flag was VolgaCTF{... so I searched for that) and boom! The flag magically appeared.
 
 ![FLAG](https://user-images.githubusercontent.com/80392368/112882086-cb17e100-90cc-11eb-9a61-95b1bf292203.PNG)
