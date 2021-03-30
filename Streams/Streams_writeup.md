@@ -1,5 +1,7 @@
 # VolgaCTF 2021 - Streams
 
+**Warning:** I'm new to the world of CTF, this is my first writeup. So sorry in advance if this writeup is messy, I'm still learning how to do it properly :)
+
 This challenge provides two pcap files: stream.pcap and stream2.pcap...but what exactly are pcap files? 
 PCAP files are Packet CAPtured files from Wireshark (a tool for network traffic analysis and more, link to the official website --> https://www.wireshark.org/)
 
@@ -8,13 +10,13 @@ The first thing I thought is that some sort of files were loaded/downloaded from
 
 ![Stream1](https://user-images.githubusercontent.com/80392368/112874625-6efc8f00-90c3-11eb-9e3f-718463d0bc69.PNG)
 
-By clicking on one of those packets, we can see in the info column that there is this request to store a file called "root.rar", so my intuition was correct. At first, I didn't know what to do, so I started researching on the Internet when I stumbled across this site --> https://shankaraman.wordpress.com/2013/06/06/reconstructing-files-from-wireshark-packets/ that gave me some inputs.
+By clicking on one of those packets, we can see in the info column that there is this request to store a file called "root.rar", so my intuition was correct. At first, I didn't know what to do, so I started researching on the Internet, when I stumbled across this site --> https://shankaraman.wordpress.com/2013/06/06/reconstructing-files-from-wireshark-packets/ that gave me some inputs.
 
 ## Step 1: Extract RAR file from stream.pcapng
 
 In this article is explained very well how to extract the actual rar from this pcapng file; I will summerize it here, but I suggest you reading it:
 
-1. In order to see the start of the rar file, we need to know that every rar archive have an **_header_** which, in this case, is only a sequence hex values: 52 61 72 21 1A 07 00
+1. In order to see the start of the rar file, we need to know that every rar archive have an **_header_** which, in this case, is only a sequence hex values: `52 61 72 21 1A 07 00`
 2. Unfortunately, with CTRL + F I wasn't able to search for that sequence of hex values in the packets, but I saw the first packet of FTP-DATA type and in the detailed info window at the bottom of the screen, the hex values of the header, which can be transformed in the ascii string: Rar!....
 
 
@@ -56,22 +58,25 @@ For me, this part was the hardest of this challenge, but also the most interesti
 The first thing I thought was that a keyboard communicates with the CPU thru _interrupts_. 
 The keyboard literally interrupts the CPU saying that the user has typed some characters, so the CPU can read this characters and print them to the screen.
 
-So I started searching for possible interrupts in the packets but I wasn't able to find anything. After some researches, I found this article --> https://abawazeeer.medium.com/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4 that actually was a writeup for another CTF.
+So I started searching for possible interrupts in the packets but I wasn't able to find anything. After some researches, I found this article --> https://abawazeeer.medium.com/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4 that actually was a writeup of another CTF.
+
 In this article the author talks about four ways the keyboard can interact with CPU: isochronus mode, interrupt mode, bulk mode and control mode.
 Each of these mode has an hex value that identifies the mode(0 for isochronus, 1 for interrupt, 2 for control and 3 for bulk).
-So I thought that I had to find what mode this keyboard had used, but it turned out that in this pcap file there are multiple mode!
+So I thought that I had to find what mode this keyboard had used, but it turned out that in this pcap file there are multiple modes!
 
 ![Capture7](https://user-images.githubusercontent.com/80392368/112876218-863c7c00-90c5-11eb-9e2f-6e35da4dfa30.PNG)
 
-I started looking for interrupt mode packets and I tried to see if from the Lefover Captured Data (Data that can contain the number of the key pressed) I could have been able to extract the key pressed from the user, but nothing. The legth of this data was too big to be a keystroke.
+I started looking for interrupt mode packets and I tried to see if from the Lefover Captured Data (Data that can contain the number of the key pressed) I could have been able to extract the key pressed from the user, but nothing. 
 
-Reading the article mentioned before, I tried to put the same filter shown in the article: `((usb.transfer_type == 0x01) && (frame.len == 72)) && !(usb.capdata == 00:00:00:00:00:00:00:00)`. But this filter didn't worked for me.
+The legth of this data was too big to be a keystroke.
+
+Reading the article mentioned before, I tried to put the same display filter shown in the article: `((usb.transfer_type == 0x01) && (frame.len == 72)) && !(usb.capdata == 00:00:00:00:00:00:00:00)` but this filter didn't worked for me.
 So I tried to remove the "frame.len" part, applying the following filter: `((usb.transfer_type == 0x01) && (frame.len == 72)) && !(usb.capdata == 00:00:00:00:00:00:00:00)`.
 This is the output I received.
 
 ![Capture8](https://user-images.githubusercontent.com/80392368/112878161-e46a5e80-90c7-11eb-9541-6a0e44b24806.PNG)
 
-The packet with length 35 caught my attention: the Leftover Capture Data were very small and of the format `0000xx0000000000` (8 hex values), and this was also the format of the keystrokes that the guy of the writeup had found! 
+The packet with length 35 caught my attention: the Leftover Capture Data wad very small and of the format `0000xx0000000000` (8 hex values), and this was also the format of the keystrokes that the guy of the writeup had found! 
 
 
 Leftover Capture Data |
@@ -93,7 +98,9 @@ Leftover Capture Data |
 0000**23**0000000000 |
 0000**26**0000000000 |
 
-These are the hex values that I found
+These are the hex values that I found.
+
+
 I tried to use his python script to map the `xx` values of the packets with the keys, but it didn't worked for me.
 Eventually I figured out that these values are not the hex values of the key pressed, but they are the hex values of the **Usage IDs** of the keys. 
 Fortunately I found a PDF from usb.org that explain the translation between Usage ID and key value. Link to the pdf --> https://usb.org/sites/default/files/documents/hut1_12v2.pdf (page 53)
