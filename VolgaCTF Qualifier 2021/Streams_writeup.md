@@ -77,7 +77,7 @@ I started looking for interrupt mode packets and I tried to see if from the Lefo
 The legth of this data was too big to be a keystroke.
 
 Reading the article mentioned before, I tried to put the same display filter shown in the article: `((usb.transfer_type == 0x01) && (frame.len == 72)) && !(usb.capdata == 00:00:00:00:00:00:00:00)` but this filter didn't worked for me.
-So I tried to remove the "frame.len" part, applying the following filter: `((usb.transfer_type == 0x01) && (frame.len == 72)) && !(usb.capdata == 00:00:00:00:00:00:00:00)`.
+So I tried to remove the "frame.len" part, applying the following filter: `((usb.transfer_type == 0x01) && !(usb.capdata == 00:00:00:00:00:00:00:00)`.
 This is the output I received.
 
 ![Capture8](https://user-images.githubusercontent.com/80392368/112878161-e46a5e80-90c7-11eb-9541-6a0e44b24806.PNG)
