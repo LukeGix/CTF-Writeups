@@ -30,4 +30,4 @@ However, I've tried to do 'echo "OpenSesame" > /dev/safe' but no flag in dmesg.
 
 So, after some time, I found in the init module function of the device a variable called rot13_ops, so I thought that maybe I had to encrypt it in ROT13.
 
-I used cybercher --> https://gchq.github.io/CyberChef/ to encrypt "OpenSesame" and echoed it in /dev/safe and in dmesg appeared the flag!
+I used cyberchef --> https://gchq.github.io/CyberChef/ to encrypt "OpenSesame" and echoed it in /dev/safe and in dmesg appeared the flag!
