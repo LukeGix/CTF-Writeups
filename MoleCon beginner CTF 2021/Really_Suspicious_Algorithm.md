@@ -34,7 +34,7 @@ As the name of the challenge suggests, we have to break RSA.
 
 RSA 101: https://en.wikipedia.org/wiki/RSA_(cryptosystem)
 
-The problem with this istance of RSA is the exponent. If we look  it carefully, we can see that e = phi(p * q) + 3. 
+The problem with this instance of RSA is the exponent. If we look  it carefully, we can see that e = phi(p * q) + 3. 
 phi() is Euler's totient function (https://en.wikipedia.org/wiki/Euler%27s_totient_function), and in this case phi(p * q) = phi(p) * phi(q) = (p-1)(q-1) = pq-p-q+1, since p and q are prime numbers.
 
 So we can write e = phi(p * q) + 3 = phi(n) + 3.
