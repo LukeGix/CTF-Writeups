@@ -136,3 +136,28 @@ AFTER A LONG PAUSE THE MASTER REPLIED, "THEN YOU ARE WELCOME TO COME STUDY"
 
 
 We figure out that the numbers are in the format line:nth character, combining all the letters we had the flag!
+9:43 -> p
+19:50 -> t
+5:35 -> m
+1:1 -> {
+14:41 -> S
+19:10 -> E
+12:11 -> E
+7:44 -> K
+5:23 -> A
+20:11 -> N
+6:58 -> D
+16:22 -> Y
+20:63 -> O
+8:12 -> U
+17:27 -> S
+2:34 -> H
+9:4 -> A
+20:34 -> L
+19:57 -> L
+15:35 -> F
+8:44 -> I
+15:80 -> N
+18:29 -> D
+1:8 -> }
+ptm{SEEKANDYOUSHALLFIND}
